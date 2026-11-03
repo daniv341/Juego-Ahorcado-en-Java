@@ -1,53 +1,60 @@
 import java.util.Scanner;
 
 public class Ahorcado {
-    public static void main(String[] args) throws Exception {
-        //si deseas cambiar el nombre del .java debes poner el mismo nombre despues de class y en el archivo
-        Scanner scanner=new Scanner(System.in);
-        String palabra="webonaso";
-        int intentos=0;
-        int intentosMaximos=10;
-        //int contador=0;
-        boolean resultado=false;
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String palabra = "webonaso";
+        int intentos = 0;
+        int intentosMaximos = 10;
+        boolean resultado = false;
+        String letrasProbadas = "";
 
-        char[] letrasAdivinadas= new char[palabra.length()];
-
-        for (int index = 0; index < letrasAdivinadas.length; index++) {
-            letrasAdivinadas[index]='_';
-            
+        char[] letrasAdivinadas = new char[palabra.length()];
+        for (int i = 0; i < letrasAdivinadas.length; i++) {
+            letrasAdivinadas[i] = '_';
         }
 
-        while (intentos<intentosMaximos || !resultado){
-            System.out.println("palabra a adivinar: "+String.valueOf(letrasAdivinadas)+"(tamanio palabra: "+palabra.length()+")");
-            System.out.println("introduce 1 letra, por favor");
-            //tomara solo la primera letra
-            char letra= Character.toLowerCase(scanner.next().charAt(0));
-            boolean letraCorrecta=false;
+        while (intentos < intentosMaximos && !resultado) {
+            System.out.println("Palabra a adivinar: " + String.valueOf(letrasAdivinadas));
+            System.out.println("Introduce una letra:");
 
+            String entrada = scanner.next().toLowerCase();
+            if (entrada.length() != 1 || !Character.isLetter(entrada.charAt(0))) {
+                System.out.println("Entrada no válida. Escribe una sola letra.");
+                continue;
+            }
+
+            char letra = entrada.charAt(0);
+            if (letrasProbadas.indexOf(letra) >= 0) {
+                System.out.println("Ya probaste esa letra. Intenta con otra.");
+                continue;
+            }
+            letrasProbadas += letra;
+
+            boolean letraCorrecta = false;
             for (int i = 0; i < palabra.length(); i++) {
-                if (palabra.charAt(i)==letra) {
-                    letrasAdivinadas[i]=letra;
-                    //evita que se reduzca el intento
-                    letraCorrecta=true;
+                if (palabra.charAt(i) == letra) {
+                    letrasAdivinadas[i] = letra;
+                    letraCorrecta = true;
                 }
             }
 
             if (!letraCorrecta) {
                 intentos++;
-                System.out.println("letra incorrecta, pierde 1 intento, te quedan "+(intentosMaximos-intentos)+" intentos");
-                
+                System.out.println("Letra incorrecta. Te quedan "
+                        + (intentosMaximos - intentos) + " intentos.");
             }
-            if(String.valueOf(letrasAdivinadas).equals(palabra)){
-                System.out.println("Felicidades, haz adivinado la palabra"+palabra);
-                
-            }
-            
-        }
-        if (!resultado) {
-            System.out.println("perdiste webozaso");
-        }
-        
-        scanner.close();
 
+            if (String.valueOf(letrasAdivinadas).equals(palabra)) {
+                resultado = true;
+                System.out.println("¡Felicidades! Adivinaste la palabra: " + palabra);
+            }
+        }
+
+        if (!resultado) {
+            System.out.println("Perdiste. La palabra era: " + palabra);
+        }
+
+        scanner.close();
     }
 }
